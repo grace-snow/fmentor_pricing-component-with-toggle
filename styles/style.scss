@@ -1,0 +1,399 @@
+$brand-100: hsl(236, 72%, 79%);
+$brand-200: hsl(237, 63%, 64%);
+$brand-300: hsl(228, 45%, 44%);
+
+$gradient: linear-gradient(to bottom right, #{$brand-100}, #{$brand-200});
+$gradient-hover: linear-gradient(to bottom right, #{$brand-200}, #{$brand-300});
+
+$white: #fff;
+$grey-100: hsl(240, 78%, 98%);
+$grey-200: hsl(234, 14%, 74%);
+$grey-300: hsl(233, 13%, 49%);
+$grey-400: hsl(232, 13%, 33%);
+
+$border: 1px solid $grey-200;
+
+$font: "Montserrat", sans-serif;
+$bold: 700;
+
+$breakpoints: (
+	small: 44em,
+	medium: 60em,
+);
+
+$base-font-size: 15px;
+
+html {
+	font-size: $base-font-size;
+}
+
+body {
+	position: relative;
+	margin: 0;
+	padding: 2rem 1rem;
+	min-height: calc(100vh - 2rem);
+	font-family: $font;
+	text-align: center;
+	color: $grey-300;
+	display: flex;
+	flex-direction: column;
+
+	background-color: $grey-100;
+	background-image: url(/images/bg-top.svg);
+	background-repeat: no-repeat;
+	background-position: 50vw -8vw;
+	background-size: 78vw;
+}
+
+main {
+	flex-grow: 1;
+}
+
+h1 {
+	margin: 1rem 0 2.5rem;
+}
+
+/*----------------------------
+	Attribution footer
+----------------------------*/
+
+.attribution {
+	font-size: calc($base-font-size * 0.825);
+	text-align: center;
+	a {
+		color: $brand-300;
+	}
+}
+
+/*----------------------------
+	Visually hidden
+----------------------------*/
+.sr-only {
+	border: 0 !important;
+	clip: rect(1px, 1px, 1px, 1px) !important;
+	-webkit-clip-path: inset(50%) !important;
+	clip-path: inset(50%) !important;
+	height: 1px !important;
+	margin: -1px !important;
+	overflow: hidden !important;
+	padding: 0 !important;
+	position: absolute !important;
+	width: 1px !important;
+	white-space: nowrap !important;
+}
+
+/*----------------------------
+	Toggle control
+----------------------------*/
+// For more like this, see: https://github.com/scottaohara/a11y_styled_form_controls
+
+.radio-switch {
+	// variable to allow for space around circle, like a border
+	$knob-padding: 2px;
+
+	// get rid of the fieldset styling and keep this all on a single line
+	border: none;
+	margin: 2.5rem auto;
+	padding: 0;
+	white-space: nowrap;
+	font-size: 0.825rem;
+
+	/*
+		* Inner wrapper sets a position relative so I can position absolute the inputs.
+		* display inline-block keeps the wrapper only as wide as the radio switch within.
+	*/
+	&__inner {
+		display: inline-block;
+		position: relative;
+	}
+
+	/*
+		relative labels to help position the pseudo elements
+		the z-index will be handy later, when the labels that overlap the visual switch UI need to be adjusted to allow for a user to toggle the switch without having to move their mouse/finger to the different sides of the UI
+	*/
+	&__label {
+		display: inline-block;
+		line-height: 2;
+		position: relative;
+		z-index: 2;
+	}
+
+	// inputs set to opcacity 0 are still accessible.
+	input {
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		appearance: none;
+		background: none;
+		height: 100%;
+		margin: 0;
+		opacity: 0.00001;
+		position: absolute;
+		top: 0;
+		width: 30%;
+		z-index: 3;
+
+		// align hidden inputs to label locations
+		&:first-of-type {
+			left: 0;
+		}
+		&:last-of-type {
+			right: 0;
+		}
+
+		// make it easier to see interactive (unselected) option switch
+		&:not(:checked):hover + label {
+			text-decoration: underline;
+		}
+	}
+
+	/*
+	* A toggle can only have 2 options, so use structural pseudo-classes to target them.
+	* the large padding is used to position the labels on top of the visual UI, so the switch UI itself can be mouse clicked or finger tapped to toggle the current option
+	*/
+	label:first-of-type {
+		padding-right: 5em;
+	}
+
+	label:last-child {
+		margin-left: -4.25em;
+		padding-left: 5em;
+	}
+
+	&:focus-within label:first-of-type:after {
+		box-shadow: 0 0 0 2px $white, 0 0 0 4px $grey-200;
+	}
+
+	// make switch toggle UI using label pseudo elements:
+	label:first-of-type:before,
+	label:first-of-type:after {
+		content: "";
+		height: 2em;
+		overflow: hidden;
+		pointer-events: none;
+		position: absolute;
+		vertical-align: middle;
+	}
+	// toggle - knob
+	label:first-of-type:before {
+		background: $white;
+		border-radius: 100%;
+		position: absolute;
+		transition: right 0.2s ease-in-out;
+		right: $knob-padding;
+		top: $knob-padding;
+		height: calc(2em - (2 * #{$knob-padding}));
+		width: calc(2em - (2 * #{$knob-padding}));
+		z-index: 2;
+	}
+	// toggle - background
+	label:first-of-type:after {
+		background: $gradient;
+		border-radius: 1em;
+		margin: 0 1em;
+		transition: background 0.2s ease-in-out;
+		width: 4em;
+	}
+
+	// Move the knob to visually match the checked state of the first radio button
+	input:first-of-type:checked ~ label:first-of-type:before {
+		right: calc(2em + #{$knob-padding});
+	}
+
+	/* Move the 2nd label to have a lower z-index, so when that option is toggled, the first label will overlay on top of the Switch ui, and the switch can be pressed again to toggle back to the prevoius state. */
+	input:last-of-type:checked ~ label:last-of-type {
+		z-index: 1;
+	}
+}
+
+/* 
+	*	ACCESSIBILITY extra: High Contrast Mode
+	* 'color in' the switch knob in high contrast mode by giving it a large border:
+*/
+@media screen and (-ms-high-contrast: active) {
+	.radio-switch {
+		label:first-of-type:before {
+			background-color: windowText;
+			border: 1em solid transparent;
+			/* firefox doesn't respect the bg color,
+				so the border fills the knob */
+		}
+
+		&:focus-within label:first-of-type:after {
+			outline: 2px solid;
+			outline-offset: 3px;
+		}
+	}
+}
+
+/* 
+	! IE11 Hacks to position the switch knob correctly
+*/
+_:-ms-fullscreen,
+:root .radio-switch label:first-of-type:before {
+	right: -0.2em;
+}
+_:-ms-fullscreen,
+:root .radio-switch input:first-of-type:checked ~ label:first-of-type:before {
+	right: 1.8em;
+}
+
+/*----------------------------
+	Pricing options container
+----------------------------*/
+// This gains a class via JS to display monthly prices instead
+.pricing-container {
+	color: $grey-300;
+}
+
+.package {
+	background: $white;
+	box-shadow: 1rem 1rem 1rem -1rem $grey-200;
+	border-radius: 1rem;
+	padding: 1.5rem;
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	&--highlighted {
+		background-color: $grey-400;
+		background-image: $gradient;
+		border: 0;
+		color: $white;
+		margin: 0;
+
+		.package__price {
+			color: $white;
+		}
+	}
+
+	&__type {
+		font-size: clamp(1rem, 3vw, 1.3rem);
+		margin: 0;
+	}
+
+	&__price {
+		line-height: 1;
+		font-size: clamp(3rem, 16vw, 4.5rem);
+		color: $grey-400;
+		margin: 0.5em 0;
+		display: flex;
+		align-items: center;
+
+		.dollar {
+			font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+			padding-right: 0.125em;
+		}
+	}
+
+	&__features {
+		list-style-type: none;
+		align-self: stretch;
+		margin: 0 0 2.5rem;
+		padding: 0;
+
+		li {
+			border-bottom: $border;
+			padding: 1rem 0.5rem;
+
+			&:first-child {
+				border-top: $border;
+			}
+		}
+	}
+
+	.btn {
+		align-self: stretch;
+	}
+}
+
+.price__monthly {
+	display: none;
+}
+.js-show-monthly {
+	.price__monthly {
+		display: block;
+	}
+	.price__annually {
+		display: none;
+	}
+}
+
+.btn {
+	$btn-radius: 0.5em;
+	position: relative;
+	display: block;
+	padding: 1em 2em;
+	background: $gradient;
+	border: 1px solid transparent;
+	color: $white;
+	text-decoration: none;
+	font-size: 0.825rem;
+	border-radius: $btn-radius;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	z-index: 1;
+	transition: outline 0 ease, all 0.3s ease;
+
+	&:hover {
+		opacity: 0.8;
+	}
+
+	&:active {
+		background: $white;
+		color: $brand-200;
+		border-color: $grey-300;
+	}
+	&:focus {
+		box-shadow: 0 0 0 2px $white, 0 0 0 4px $grey-200;
+	}
+
+	&--inverted {
+		background: $white;
+		color: $brand-200;
+
+		&:active {
+			background: transparent;
+			color: $white;
+			border-color: $white;
+		}
+		&:focus {
+			box-shadow: 0 0 0 2px $brand-200, 0 0 0 4px white;
+		}
+	}
+}
+
+/*
+	Larger screens
+*/
+@media screen and (min-width: map-get($breakpoints, small)) {
+	// bg images
+	body {
+		background-image: url(/images/bg-bottom.svg), url(/images/bg-top.svg);
+		background-position: -9vw bottom, right top;
+		background-repeat: no-repeat, no-repeat;
+		background-size: 34vw, 27vw;
+	}
+	.radio-switch {
+		font-size: 1rem;
+	}
+	.pricing-container {
+		display: flex;
+		max-width: 1000px;
+		margin: 2rem auto 3.5rem;
+
+		> * {
+			flex: 1 1 33%;
+		}
+	}
+
+	.package {
+		padding: 2rem;
+
+		&__price {
+			font-size: clamp(2.6rem, 6vw, 4rem);
+		}
+	}
+}
