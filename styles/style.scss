@@ -115,6 +115,7 @@ h1 {
 		line-height: 2;
 		position: relative;
 		z-index: 2;
+		cursor: pointer;
 	}
 
 	// inputs set to opcacity 0 are still accessible.
@@ -377,6 +378,7 @@ _:-ms-fullscreen,
 	}
 	.radio-switch {
 		font-size: 1rem;
+		margin: 3.5rem auto;
 	}
 	.pricing-container {
 		display: flex;
